@@ -2,6 +2,8 @@ import Image from "next/image";
 import { Fragment } from "react";
 import { getClient } from "@/lib/apollo/client";
 import { gql } from "@apollo/client";
+import { Box, Button, Card, Typography } from "@mui/material";
+import Link from "@/components/Navigation/Link";
 
 const PRODUCTS = gql`
   query Products {
@@ -34,9 +36,36 @@ export default async function Home() {
   return (
     <Fragment>
       <div>
-        <pre>
-          <code>{data && JSON.stringify(data, null, 4)}</code>
-        </pre>
+        {data &&
+          data.products.data.map((product, index, arr) => {
+            return (
+              <Card
+                sx={{
+                  marginTop: "1rem",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  padding: "1rem 3rem",
+                }}
+                key={index}
+              >
+                <Box>
+                  <Typography variant="h4">
+                    {product.attributes.name}
+                  </Typography>
+                  <Typography variant="h6" color="text.secondary">
+                    {product.attributes.description}
+                  </Typography>
+                </Box>
+                <Button href={`/item/${product.id}`} component={Link}>
+                  See
+                </Button>
+              </Card>
+            );
+          })}
+        {/* <pre>
+          <code>{data && JSON.stringify(data.products.data, null, 4)}</code>
+        </pre> */}
         <div>
           <a
             href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
