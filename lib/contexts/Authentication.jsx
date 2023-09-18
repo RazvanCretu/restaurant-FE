@@ -2,37 +2,32 @@
 
 import { useState, useContext, createContext, useEffect } from "react";
 import { getUser, logoutUser } from "@/lib/actions/user";
-import { getCookie } from "../actions/cookies";
 
 const AuthContext = createContext({});
 
 export const useAuth = () => useContext(AuthContext);
 
-const Auth = ({ userData, children }) => {
+const Auth = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  // useEffect(() => {
-  //   const refetchUser = async () => {
-  //     const user = await getUser()
-  //       .then((data) => data)
-  //       .catch((err) => err);
+  useEffect(() => {
+    const refecthUser = async () => {
+      const userData = await getUser();
+      return userData;
+    };
 
-  //     return user;
-  //   };
+    if (!user) {
+      refecthUser().then((data) => {
+        setUser(data);
+        console.log(data);
+      });
+    }
+  }, []);
 
-  //   if (!user) {
-  //     const me = refetchUser();
-  //     if (me) {
-  //       console.log(me, typeof me);
-  //       setUser(me);
-  //     }
-  //   }
-  // }, []);
-
-  const isAuthenticated = userData ? true : false;
+  const isAuthenticated = user ? true : false;
 
   const logout = () => {
-    // setUser(null);
+    setUser(null);
     logoutUser();
   };
 
@@ -42,7 +37,7 @@ const Auth = ({ userData, children }) => {
     <AuthContext.Provider
       value={{
         isAuthenticated,
-        user: userData,
+        user,
         setUser,
         logout,
       }}

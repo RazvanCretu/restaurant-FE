@@ -1,20 +1,26 @@
 import Toggle from "../Toggle";
 import Link from "./Link";
+import Logout from "./LogoutButton";
 import { AppBar, Box } from "@mui/material";
+import { getCookie } from "@/lib/actions/cookies";
 
 const ROUTES = [
-  { name: "Home", path: "/" },
+  { name: "Home", path: "/", protected: false, public: true },
   {
     name: "Dashboard",
     path: "/dashboard",
+    protected: true,
   },
   {
-    name: "Login",
-    path: "/login",
+    name: "Profile",
+    path: "/profile",
+    protected: true,
   },
 ];
 
-const Bar = () => {
+const Bar = async () => {
+  const token = await getCookie("token");
+
   return (
     <AppBar
       sx={{
@@ -27,10 +33,12 @@ const Bar = () => {
     >
       <Toggle />
       <Box>
-        {ROUTES.map((route, i) => (
+        {ROUTES.filter(
+          (route) => route.protected === (token && true) || route.public
+        ).map((route, i) => (
           <Link
-            sx={{ ml: "1rem", color: "info.main" }}
             key={i}
+            sx={{ ml: "1rem", color: "info.main" }}
             href={route.path}
             underline="none"
           >
@@ -38,6 +46,7 @@ const Bar = () => {
           </Link>
         ))}
       </Box>
+      <Logout isAuthenticated={token} />
     </AppBar>
   );
 };

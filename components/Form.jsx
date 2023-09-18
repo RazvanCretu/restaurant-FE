@@ -4,7 +4,7 @@ import React from "react";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { Button, TextField } from "@mui/material";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useAuth } from "@/lib/contexts/Authentication";
 import { loginUser } from "@/lib/actions/user";
 
@@ -37,8 +37,9 @@ const LoginForm = () => {
     const user = await loginUser(formik.values.email, formik.values.password);
 
     if (user) {
+      router.replace("/dashboard");
       setUser(user);
-      // router.replace("/dashboard");
+      // redirect("/dashboard", "replace");
     }
   };
 
