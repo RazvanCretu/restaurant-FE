@@ -1,13 +1,16 @@
 import Toggle from "../Toggle";
 import Link from "./Link";
 import { AppBar, Box } from "@mui/material";
-import Logout from "./LogoutButton";
 
 const ROUTES = [
   { name: "Home", path: "/" },
   {
     name: "Dashboard",
     path: "/dashboard",
+  },
+  {
+    name: "Login",
+    path: "/login",
   },
 ];
 
@@ -34,7 +37,6 @@ const Bar = () => {
             {route.name}
           </Link>
         ))}
-        <Logout />
       </Box>
     </AppBar>
   );

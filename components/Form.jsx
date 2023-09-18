@@ -4,12 +4,9 @@ import React from "react";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { Button, TextField } from "@mui/material";
-import { useMutation } from "@apollo/client";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/contexts/Authentication";
-import { setCookie } from "@/lib/actions/cookies";
 import { loginUser } from "@/lib/actions/user";
-import { LOGIN } from "@/lib/queries/user";
 
 const validationSchema = yup.object({
   email: yup
@@ -24,7 +21,6 @@ const validationSchema = yup.object({
 
 const LoginForm = () => {
   const router = useRouter();
-  const { setUser } = useAuth();
   const formik = useFormik({
     initialValues: {
       email: "test@gmail.com",
@@ -35,34 +31,19 @@ const LoginForm = () => {
       handleLogin();
     },
   });
-  const [login, { error, loading, reset }] = useMutation(LOGIN, {
-    variables: {
-      input: {
-        identifier: formik.values.email,
-        password: formik.values.password,
-        provider: "local",
-      },
-    },
-  });
+  const { setUser } = useAuth();
 
   const handleLogin = async () => {
-    // const { data } = await login();
-    await loginUser(formik.values.email, formik.values.password);
-    // console.log(data);
-    // if (data) {
-    //   //   window.localStorage.setItem("token", data.login.jwt);
-    //   //   console.log(data.login.user);
-    //   setUser(data.login.user);
-    //   //   setCookie("token", data.login.jwt);
-    //   //   router.push("/dashboard");
-    // }
+    const user = await loginUser(formik.values.email, formik.values.password);
+
+    if (user) {
+      setUser(user);
+      // router.replace("/dashboard");
+    }
   };
 
   return (
-    <form
-      onSubmit={formik.handleSubmit}
-      //   action={loginUser}
-    >
+    <form action={formik.handleSubmit}>
       <TextField
         fullWidth
         id="email"

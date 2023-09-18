@@ -1,32 +1,27 @@
 "use client";
 
 import { useAuth } from "@/lib/contexts/Authentication";
-import { Button } from "@mui/material";
-import Link from "./Link";
+import { IconButton } from "@mui/material";
 import { Fragment } from "react";
+import { LogoutRounded } from "@mui/icons-material";
 
 const Logout = () => {
   const { isAuthenticated, logout } = useAuth();
 
   return (
     <Fragment>
-      {isAuthenticated ? (
-        <Link
-          href="#"
+      {isAuthenticated && (
+        <IconButton
+          sx={{
+            borderRadius: "50%",
+            position: "absolute",
+            margin: "auto 5rem 3rem auto",
+          }}
+          aria-label="Logout"
           onClick={logout}
-          sx={{ ml: "1rem", color: "info.main" }}
-          underline="none"
         >
-          Logout
-        </Link>
-      ) : (
-        <Link
-          sx={{ ml: "1rem", color: "info.main" }}
-          href="/login"
-          underline="none"
-        >
-          Login
-        </Link>
+          <LogoutRounded />
+        </IconButton>
       )}
     </Fragment>
   );
